@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Security;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -10,6 +11,9 @@ public class TvController : MonoBehaviour
     public Sprite TvOff;
     public Sprite TvStatic1;
     public Sprite TvStatic2;
+    public SpriteRenderer Button;
+    public Sprite OnButton;
+    public Sprite OffButton;
     public float LimitNewsVoice = 1f;
     public Sprite TvNews1;
     public Sprite TvNews2;
@@ -32,13 +36,22 @@ public class TvController : MonoBehaviour
     public Color LightCartoon;
     public float FlickerTimeMin = 0.1f;
     public float FlickerTimeMax = 0.3f;
+    public float MaxOnTimeTvByUser = 15f;
+    public float MinOnTimeTvByUser = 2f;
 
     public int TvStateSequence; //0 = off, 1 = static, 2 = news, 3 = cartoon
 
+    //input from gamemanager
+    public float GameSeverityFromGamemanager; //0-1
+
     public bool EnableBlood;
+    public bool IsControlledByGameManager;
 
     private bool IsSlectingStaticTv;
     private bool SelectStaticTv;
+
+    private bool TvStartedByPlayer;
+    private float CurrentTimeLeftOnByUser;
 
     private bool IsPlayingStatic;
     private bool isPlayingNews;
@@ -79,6 +92,9 @@ public class TvController : MonoBehaviour
         switch (TvStateSequence)
         {
             case 0:
+                //Button on off
+                Button.sprite = OffButton;
+
                 TvScreenSpriteRenderer.sprite = TvOff;
                 //Sound play
                 TvAudioSource.Stop();
@@ -95,7 +111,10 @@ public class TvController : MonoBehaviour
                 }
                 break;
             case 1:
-                if(!IsSlectingStaticTv)
+                //Button on off
+                Button.sprite = OnButton;
+
+                if (!IsSlectingStaticTv)
                 {
                     StartCoroutine(StaticTvCoroutine());
                 }
@@ -137,6 +156,8 @@ public class TvController : MonoBehaviour
                 }
                 break;
             case 2:
+                //Button on off
+                Button.sprite = OnButton;
                 //Sound play
                 IsPlayingStatic = false;
                 isPlayingCartoon = false;
@@ -177,6 +198,9 @@ public class TvController : MonoBehaviour
                 BloodOnWall.SetActive(false);
                 break;
             case 3:
+                //Button on off
+                Button.sprite = OnButton;
+
                 CartoonTimer = CartoonTimer - Time.deltaTime;
                 if(CartoonTimer < 0)
                 {
@@ -211,6 +235,43 @@ public class TvController : MonoBehaviour
                 //show blood
                 BloodOnWall.SetActive(false);
                 break;
+        }
+
+        //tv started by player
+        if(!IsControlledByGameManager)
+        {
+            if (TvStartedByPlayer & CurrentTimeLeftOnByUser > 0)
+            {
+                CurrentTimeLeftOnByUser = CurrentTimeLeftOnByUser - Time.deltaTime;
+
+                if (GameSeverityFromGamemanager > 0.5f)
+                {
+                    TvStateSequence = 1;
+                }
+                else
+                {
+                    TvStateSequence = 3;
+                }
+            }
+            else
+            {
+                TvStateSequence = 0;
+            }
+        }
+    }
+
+    void OnMouseUp()
+    {
+        if(!IsControlledByGameManager & TvStateSequence == 0)
+        {
+            //Start tv for X seconds
+            TvStartedByPlayer = true;
+            CurrentTimeLeftOnByUser = (1 - GameSeverityFromGamemanager) * MaxOnTimeTvByUser;
+            
+            if(CurrentTimeLeftOnByUser < MinOnTimeTvByUser)
+            {
+                CurrentTimeLeftOnByUser  = MinOnTimeTvByUser;
+            }
         }
     }
 
