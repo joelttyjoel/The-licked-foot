@@ -2,29 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-using static UnityEditor.PlayerSettings;
+using UnityEngine.UI;
 
 public class MyGameManager : MonoBehaviour
 {
+    public Slider HeatSlider;
+    public LightningManager MyLightning;
+    public DoorController MyDoor;
     public TvController ThisTvController;
     public MonstergirlController ThisMonsterGirlController;
     public Animator LeftHandAnimator;
     public int SecondsShowKidsshowStart = 20;
     public int BuzzingAfterKidsShow = 1;
     public int NewsTime = 66;
+    public float CurrentHeatValue = 0;
+    public float TickTimeHeat = 0.2f;
+    public float IncreaseHeatByXEveryUpdate = 0.001f;
+    public float DecreaseHeatByXEveryUpdate = 0.002f;
+    public float CurrentLimitTimeFeetIncreaseHeat = 20;//seconds
+    public float CurrentDarknessValue = 0;
+    public float TickTimeDarkness = 0.2f;
+    public float IncreaseDarknessByXEveryUpdate = 0.001f;
 
-    private int Sequence;
+    public float CurrentTimeLeftFoot = 10;
+    public float CurrentTimeRightFoot = 20;
+
+    private float TimerLoopingHeat;
+
+    private float TimerLoopingDarkness;
+
+    private bool HeatAddDarkness;
+
+    private float EndTimer = 0;
+
+    public int Sequence;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        CurrentHeatValue = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Send game severity to tv
+        ThisTvController.GameSeverityFromGamemanager = CurrentDarknessValue;
+
         switch (Sequence)
         {
             case 0:
@@ -36,10 +60,154 @@ public class MyGameManager : MonoBehaviour
                 break;
             case 2:
                 //After intro with tv
+                //If darkness above X level, go to next stage
+                if(CurrentDarknessValue > 0.1)
+                {
+                    Sequence = 3;
+                }
                 break;
             case 3:
-                
+                //Darkness 10%
+                MyLightning.EnableLightningFromMaster = true;
+                if (CurrentDarknessValue > 0.30)
+                {
+                    Sequence = 4;
+                }
                 break;
+            case 4:
+                //Just fire off lighting lady
+                MyLightning.DoLadyLightningAsap = true;
+                Sequence = 5;
+                break;
+            case 5:
+                //Darkness 30%
+                if (CurrentDarknessValue > 0.40)
+                {
+                    Sequence = 6;
+                }
+                break;
+            case 6:
+                //Just fire off the door
+                MyDoor.FromMasterDoOpenDoor = true;
+                Sequence = 7;
+                break;
+            case 7:
+                //Darkness 40%
+                MyLightning.AllowTurnOnBloodFromMaster = true;
+                if (CurrentDarknessValue > 0.50)
+                {
+                    Sequence = 8;
+                }
+                break;
+            case 8:
+                //Darkness 50%
+                if (CurrentDarknessValue > 0.70)
+                {
+                    Sequence = 9;
+                }
+                break;
+            case 9:
+                //Darkness 70%
+                if (CurrentDarknessValue > 0.80)
+                {
+                    Sequence = 10;
+
+                    LeftHandAnimator.SetBool("HandBeUpOrDown_0down1up", true);
+                }
+                break;
+            case 10:
+                //Darkness 80%
+                if (CurrentDarknessValue > 0.90)
+                {
+                    Sequence = 11;
+                }
+                break;
+            case 11:
+                //Darkness 90%
+                if (CurrentDarknessValue > 0.91)
+                {
+                    Sequence = 12;
+                    ThisMonsterGirlController.StateGirlAnimation = 1;
+                }
+                break;
+            //no return
+            case 12:
+                //Darkness 95-100%
+                ThisTvController.IsControlledByGameManager = true;
+                ThisTvController.TvStateSequence = 1;
+                if (CurrentDarknessValue > 0.99)
+                {
+                    ThisMonsterGirlController.StateGirlAnimation = 2;
+                    Sequence = 13;
+                }
+                break;
+            case 13:
+                EndTimer = EndTimer + Time.deltaTime;
+                if (EndTimer > 5)
+                {
+                    Application.Quit();
+                }
+                break;
+        }
+        //Calculate darkness
+        //Calculate increasing darknes values
+        if (TimerLoopingDarkness < 0)
+        {
+            TimerLoopingDarkness = TickTimeDarkness;
+
+            if (ThisTvController.TvStateSequence == 0 || Sequence > 11)
+            {
+                CurrentDarknessValue = CurrentDarknessValue + IncreaseDarknessByXEveryUpdate;
+            }
+        }
+        if (CurrentDarknessValue > 1)
+        {
+            CurrentDarknessValue = 1;
+        }
+        TimerLoopingDarkness = TimerLoopingDarkness - Time.deltaTime;
+
+        //Get value from feet, turn up or down heat slider
+        if (TimerLoopingHeat < 0)
+        {
+            TimerLoopingHeat = TickTimeHeat;
+
+            if (CurrentTimeLeftFoot > CurrentLimitTimeFeetIncreaseHeat)
+            {
+                CurrentHeatValue = CurrentHeatValue + IncreaseHeatByXEveryUpdate;
+            }
+            if (CurrentTimeRightFoot > CurrentLimitTimeFeetIncreaseHeat)
+            {
+                CurrentHeatValue = CurrentHeatValue + IncreaseHeatByXEveryUpdate;
+            }
+            if (CurrentTimeLeftFoot < CurrentLimitTimeFeetIncreaseHeat & CurrentTimeRightFoot < CurrentLimitTimeFeetIncreaseHeat)
+            {
+                CurrentHeatValue = CurrentHeatValue - DecreaseHeatByXEveryUpdate;
+            }
+
+            if(HeatAddDarkness)
+            {
+                CurrentDarknessValue = CurrentDarknessValue + IncreaseDarknessByXEveryUpdate;
+            }
+        }
+        TimerLoopingHeat = TimerLoopingHeat - Time.deltaTime;
+        if(CurrentHeatValue < 0)
+        {
+            CurrentHeatValue = 0;
+        }
+        if (CurrentHeatValue > 1)
+        {
+            CurrentHeatValue = 1;
+        }
+        HeatSlider.value = CurrentHeatValue;
+
+        //If heat is above X value, increase darkness fast
+        if(CurrentHeatValue > 0.95)
+        {
+            HeatAddDarkness = true;
+        }
+        else
+        {
+            HeatAddDarkness = false;
         }
     }
 

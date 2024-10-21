@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LightningManager : MonoBehaviour
 {
+    public TvController TheTv;
     public AudioSource LightiningSource;
     public Animator LightningAnimation;
     public float MinSecondsBetweenLightnings;
@@ -12,13 +13,14 @@ public class LightningManager : MonoBehaviour
 
     public bool EnableLightningFromMaster;
     public bool DoLadyLightningAsap;
+    public bool AllowTurnOnBloodFromMaster;
 
     private float CurrentTimeLeftNoLightning;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        AllowTurnOnBloodFromMaster = false;
     }
 
     // Update is called once per frame
@@ -47,6 +49,11 @@ public class LightningManager : MonoBehaviour
             LightiningSource.Play();
 
             LightningAnimation.SetInteger("DoFlash_0NoFlash_1FlashWithout_2FlashWith", 1);
+
+            if(AllowTurnOnBloodFromMaster)
+            {
+                TheTv.EnableBlood = true;
+            }
         }
 
         //If not equal to idle, then reset
