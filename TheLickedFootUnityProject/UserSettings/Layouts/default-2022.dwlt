@@ -17,7 +17,7 @@ MonoBehaviour:
     x: 0
     y: 43
     width: 2560
-    height: 997
+    height: 1357
   m_ShowMode: 4
   m_Title: Scene
   m_RootView: {fileID: 2}
@@ -45,7 +45,7 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 2560
-    height: 997
+    height: 1357
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 977
+    y: 1337
     width: 2560
     height: 20
   m_MinSize: {x: 0, y: 0}
@@ -115,11 +115,11 @@ MonoBehaviour:
     x: 0
     y: 30
     width: 2560
-    height: 947
+    height: 1307
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 41
+  controlID: 96
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -274,8 +274,8 @@ MonoBehaviour:
     y: 0
     width: 672
     height: 1307
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -439,9 +439,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 8e980000
-      m_LastClickedID: 39054
-      m_ExpandedIDs: 7c25ffff2226ffff6228ffffdcf3ffff2ef4ffff4ef4ffffb6f4ffff1afbffff66980000bc980000
+      m_SelectedIDs: 5a910000
+      m_LastClickedID: 37210
+      m_ExpandedIDs: e6beffff8cbfffffd0c1ffffc4f9ffff4e910000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -723,7 +723,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 1
+      displayed: 0
       snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
@@ -847,9 +847,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.4125562, y: -0.118141085, z: 0.016821023}
+    m_Target: {x: 1.03, y: 0.56, z: 0}
     speed: 2
-    m_Value: {x: 0.31642747, y: -0.09061332, z: 0.012901574}
+    m_Value: {x: 1.03, y: 0.56, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -899,9 +899,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 8.317896
+    m_Target: 10
     speed: 2
-    m_Value: 8.709839
+    m_Value: 10
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1069,7 +1069,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Animations
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1077,16 +1077,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Animations
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\mikae\source\repos\The-licked-foot\TheLickedFootUnityProject
+  m_LastProjectPath: E:\Unity\TheFootLicker\The licked foot\TheLickedFootUnityProject
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ee700000
-    m_LastClickedID: 28910
-    m_ExpandedIDs: 000000006e6f000000ca9a3b
+    m_SelectedIDs: 80710000
+    m_LastClickedID: 29056
+    m_ExpandedIDs: 00000000fe6f000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1114,7 +1114,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000006e6f0000
+    m_ExpandedIDs: 00000000fe6f0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1240,7 +1240,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 38954
+  m_LastSelectedObjectID: 12994
 --- !u!114 &19
 MonoBehaviour:
   m_ObjectHideFlags: 52

@@ -89,6 +89,16 @@ public class TvController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //show blood
+        if (EnableBlood)
+        {
+            BloodOnWall.SetActive(true);
+        }
+        else
+        {
+            BloodOnWall.SetActive(false);
+        }
+
         switch (TvStateSequence)
         {
             case 0:
@@ -100,15 +110,6 @@ public class TvController : MonoBehaviour
                 TvAudioSource.Stop();
                 //light
                 lightTv.color = LightOff;
-                //show blood
-                if (EnableBlood)
-                {
-                    BloodOnWall.SetActive(true);
-                }
-                else
-                {
-                    BloodOnWall.SetActive(false);
-                }
                 break;
             case 1:
                 //Button on off
@@ -144,15 +145,6 @@ public class TvController : MonoBehaviour
                     {
                         TvAudioSource.Play();
                     }
-                }
-                //show blood
-                if(EnableBlood)
-                {
-                    BloodOnWall.SetActive(true);
-                }
-                else
-                {
-                    BloodOnWall.SetActive(false);
                 }
                 break;
             case 2:

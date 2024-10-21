@@ -17,6 +17,8 @@ public class LightningManager : MonoBehaviour
 
     private float CurrentTimeLeftNoLightning;
 
+    private float TimerTurnOffAnimation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,7 +61,12 @@ public class LightningManager : MonoBehaviour
         //If not equal to idle, then reset
         if (!LightningAnimation.GetCurrentAnimatorStateInfo(0).IsName("Flash_Idle"))
         {
-            LightningAnimation.SetInteger("DoFlash_0NoFlash_1FlashWithout_2FlashWith", 0);
+            TimerTurnOffAnimation = TimerTurnOffAnimation + Time.deltaTime;
+            if(TimerTurnOffAnimation > 0.1)
+            {
+                TimerTurnOffAnimation = 0;
+                LightningAnimation.SetInteger("DoFlash_0NoFlash_1FlashWithout_2FlashWith", 0);
+            }
         }
     }
 }

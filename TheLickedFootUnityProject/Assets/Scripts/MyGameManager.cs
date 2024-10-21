@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class MyGameManager : MonoBehaviour
 {
+    public PlayerMouseDragFeet FootLeft;
+    public PlayerMouseDragFeet FootRight;
     public Slider HeatSlider;
     public LightningManager MyLightning;
     public DoorController MyDoor;
@@ -23,9 +25,6 @@ public class MyGameManager : MonoBehaviour
     public float CurrentDarknessValue = 0;
     public float TickTimeDarkness = 0.2f;
     public float IncreaseDarknessByXEveryUpdate = 0.001f;
-
-    public float CurrentTimeLeftFoot = 10;
-    public float CurrentTimeRightFoot = 20;
 
     private float TimerLoopingHeat;
 
@@ -48,6 +47,10 @@ public class MyGameManager : MonoBehaviour
     {
         //Send game severity to tv
         ThisTvController.GameSeverityFromGamemanager = CurrentDarknessValue;
+
+        FootLeft.InputFromMasterDarkness = CurrentDarknessValue;
+
+        FootRight.InputFromMasterDarkness = CurrentDarknessValue;
 
         switch (Sequence)
         {
@@ -84,11 +87,11 @@ public class MyGameManager : MonoBehaviour
                 if (CurrentDarknessValue > 0.40)
                 {
                     Sequence = 6;
+                    MyDoor.FromMasterDoOpenDoor = true;
                 }
                 break;
             case 6:
                 //Just fire off the door
-                MyDoor.FromMasterDoOpenDoor = true;
                 Sequence = 7;
                 break;
             case 7:
@@ -171,15 +174,15 @@ public class MyGameManager : MonoBehaviour
         {
             TimerLoopingHeat = TickTimeHeat;
 
-            if (CurrentTimeLeftFoot > CurrentLimitTimeFeetIncreaseHeat)
+            if (FootLeft.TimeOutsideBlanket > CurrentLimitTimeFeetIncreaseHeat)
             {
                 CurrentHeatValue = CurrentHeatValue + IncreaseHeatByXEveryUpdate;
             }
-            if (CurrentTimeRightFoot > CurrentLimitTimeFeetIncreaseHeat)
+            if (FootRight.TimeOutsideBlanket > CurrentLimitTimeFeetIncreaseHeat)
             {
                 CurrentHeatValue = CurrentHeatValue + IncreaseHeatByXEveryUpdate;
             }
-            if (CurrentTimeLeftFoot < CurrentLimitTimeFeetIncreaseHeat & CurrentTimeRightFoot < CurrentLimitTimeFeetIncreaseHeat)
+            if (FootLeft.TimeOutsideBlanket < CurrentLimitTimeFeetIncreaseHeat & FootRight.TimeOutsideBlanket < CurrentLimitTimeFeetIncreaseHeat)
             {
                 CurrentHeatValue = CurrentHeatValue - DecreaseHeatByXEveryUpdate;
             }
