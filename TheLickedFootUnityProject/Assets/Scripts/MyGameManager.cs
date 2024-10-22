@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class MyGameManager : MonoBehaviour
 {
+    public Text ClockText;
+    public GameObject InfoTv;
+    public GameObject InfoFeet;
     public PlayerMouseDragFeet FootLeft;
     public PlayerMouseDragFeet FootRight;
     public Slider HeatSlider;
@@ -34,12 +37,29 @@ public class MyGameManager : MonoBehaviour
 
     private float EndTimer = 0;
 
+    public float TimeSecondsIncreaseMinuteClock = 1;
+    private int CurrentClockTime4;
+    private int CurrentClockTime3;
+    private int CurrentClockTime2;
+    private int CurrentClockTime1;
+
+    private float SecondTimer;
+
     public int Sequence;
 
     // Start is called before the first frame update
     void Start()
     {
         CurrentHeatValue = 0;
+
+        InfoTv.SetActive(true);
+        InfoFeet.SetActive(true);
+
+        CurrentClockTime4 = 0;
+        CurrentClockTime3 = 1;
+        CurrentClockTime2 = 0;
+        CurrentClockTime1 = 0;
+        ClockText.text = CurrentClockTime4.ToString() + CurrentClockTime3.ToString() + ":" + CurrentClockTime2.ToString() + CurrentClockTime1.ToString();
     }
 
     // Update is called once per frame
@@ -96,10 +116,10 @@ public class MyGameManager : MonoBehaviour
                 break;
             case 7:
                 //Darkness 40%
-                MyLightning.AllowTurnOnBloodFromMaster = true;
                 if (CurrentDarknessValue > 0.50)
                 {
                     Sequence = 8;
+                    MyLightning.AllowTurnOnBloodFromMaster = true;
                 }
                 break;
             case 8:
@@ -120,14 +140,7 @@ public class MyGameManager : MonoBehaviour
                 break;
             case 10:
                 //Darkness 80%
-                if (CurrentDarknessValue > 0.90)
-                {
-                    Sequence = 11;
-                }
-                break;
-            case 11:
-                //Darkness 90%
-                if (CurrentDarknessValue > 0.91)
+                if (CurrentDarknessValue > 0.88)
                 {
                     Sequence = 12;
                     ThisMonsterGirlController.StateGirlAnimation = 1;
@@ -138,7 +151,7 @@ public class MyGameManager : MonoBehaviour
                 //Darkness 95-100%
                 ThisTvController.IsControlledByGameManager = true;
                 ThisTvController.TvStateSequence = 1;
-                if (CurrentDarknessValue > 0.99)
+                if (CurrentDarknessValue > 0.94)
                 {
                     ThisMonsterGirlController.StateGirlAnimation = 2;
                     Sequence = 13;
@@ -212,6 +225,29 @@ public class MyGameManager : MonoBehaviour
         {
             HeatAddDarkness = false;
         }
+
+        //Just spaghetti do clock update
+        if(SecondTimer > TimeSecondsIncreaseMinuteClock)
+        {
+            //Every second
+            CurrentClockTime1 = CurrentClockTime1 + 1;
+            if(CurrentClockTime1 > 9)
+            {
+                CurrentClockTime1 = 0;
+                CurrentClockTime2 = CurrentClockTime2 + 1;
+            }
+            if(CurrentClockTime2 > 5)
+            {
+                CurrentClockTime2 = 0;
+                CurrentClockTime3 = CurrentClockTime3 + 1;
+            }
+
+            ClockText.text = CurrentClockTime4.ToString() + CurrentClockTime3.ToString() + ":" + CurrentClockTime2.ToString() + CurrentClockTime1.ToString();
+
+            SecondTimer = 0;
+        }    
+
+        SecondTimer = SecondTimer + Time.deltaTime;
     }
 
     IEnumerator FirstTvSequence()
@@ -219,7 +255,11 @@ public class MyGameManager : MonoBehaviour
         ThisTvController.IsControlledByGameManager = true;
         //Play kids show for X time
         ThisTvController.TvStateSequence = 3;
-        yield return new WaitForSeconds(SecondsShowKidsshowStart);
+        yield return new WaitForSeconds(SecondsShowKidsshowStart - 3);
+        //Turn off info
+        InfoTv.SetActive(false);
+        InfoFeet.SetActive(false);
+        yield return new WaitForSeconds(3);
         //Do buzzing for Y time
         ThisTvController.TvStateSequence = 1;
         yield return new WaitForSeconds(BuzzingAfterKidsShow);
